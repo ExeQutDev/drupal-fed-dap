@@ -1,0 +1,6 @@
+'administer federal dap':
+  title: 'Access the federal DAP configuration page'
+  description: 'Configure Federal DAP configuration settings.'
+'display federal dap':
+  title: 'Access the federal DAP javascript client'
+  description: 'Display Federal DAP library'

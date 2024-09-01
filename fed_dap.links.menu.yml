@@ -1,0 +1,6 @@
+fed_dap.fed_dap_configuration_settings:
+  title: Federal - Digital Analytics Program
+  description: Configure the Federal - Digital Analytics Program
+  parent: system.admin_config_services
+  route_name: fed_dap.fed_dap_configuration_settings
+  weight: 10

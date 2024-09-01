@@ -1,0 +1,7 @@
+fed_dap.fed_dap_configuration_settings:
+  path: '/admin/config/services/dap'
+  defaults:
+    _title: 'Federal - Digital Analystics Program'
+    _form: 'Drupal\fed_dap\Form\FedDapConfigurationSettings'
+  requirements:
+    _permission: 'administer federal dap'

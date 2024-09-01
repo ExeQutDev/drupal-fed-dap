@@ -1,0 +1,26 @@
+libraries_fed_dap_ufa:
+  remote: https://github.com/digital-analytics-program/gov-wide-code
+  directory: dap
+  license:
+    name: MIT
+    url: https://github.com/digital-analytics-program/gov-wide-code/blob/master/README.md
+    gpl-compatible: true
+  cdn:
+    /libraries/dap/: 
+    https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js:
+        type: external
+        minified: true
+        preprocess: false
+        attributes:
+            async: true
+            id: "_fed_an_ua_tag"
+  js:
+    /libraries/dap/Universal-Federated-Analytics-Min.js: 
+        minified: true
+        preprocess: false
+        attributes:
+            async: true
+            id: "_fed_an_ua_tag"
+        dependencies:
+            - core/drupalSettings
+

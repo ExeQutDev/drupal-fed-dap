@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the FED - Digital Analytics Program Government-wide Code module.
+ */
+
+function _fed_dap_base() {
+
+    $config_update = [
+        'param_agency' => '',
+        'param_subagency' => '',
+        'param_sitetopic' => '',
+        'param_siteplatform' => '',
+        'js_library' => '0',
+    ];
+
+    \Drupal::service('config.factory')->getEditable('fed_dap.settings')->setData($config_update)
+            ->save();
+}
+
+/*
+ * Install Federal DAP
+ */
+function fed_dap_install($is_syncing) {
+    
+}
+
+
+/**
+ * Federal DAP Update:
+
+function fed_dap_update_10001(&$sandbox) {
+
+    // Global override to force reloading current configuration.
+    \Drupal::service('config.installer')->installDefaultConfig('module', 'fed_dap.settings');
+
+}
+ */

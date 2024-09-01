@@ -1,0 +1,135 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for FED - Digital Analytics Program Government-wide Code module.
+ */
+
+use Drupal\Core\Render\Markup;
+
+function _fed_dap_build_js_library($srcOnly = false) {
+    $result = false;
+    $validation = true;
+    $settings = \Drupal::config('fed_dap.settings');
+    $library_src = '';
+
+    // Settings values
+    $param_agency = $settings->get('param_agency');
+    $param_subagency = $settings->get('param_subagency');
+    $param_sitetopic = $settings->get('param_sitetopic');
+    $param_siteplatform = $settings->get('param_siteplatform');
+
+    $js_option = $settings->get('js_library');
+
+    if (null !== $js_option) {
+
+        // Build base library asset URL
+        if ($js_option == 0) {
+            $file_status = false;
+            if (file_exists(DRUPAL_ROOT . '/libraries/dap/Universal-Federated-Analytics-Min.js')) {
+                $file_status = true;
+            }
+            if ($file_status) {
+                $library_src = '/libraries/dap/Universal-Federated-Analytics-Min.js';
+            } else {
+                \Drupal::logger('fed_dap')->warning('Local Library is missing: /libraries/dap/Universal-Federated-Analytics-Min.js');
+                $validation = false;
+            }
+        } else if ($js_option == 1) {
+            $library_src = 'https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js';
+        }
+
+        // Capture and append parameters
+        if (null !== $param_agency) {
+            $library_src = $library_src . '?agency=' . $param_agency;
+        } else {
+            \Drupal::logger('fed_dap')->error('The Agency Parameter is required.');
+            $validation = false;
+        }
+        if (null !== $param_subagency && $param_subagency !== "") {
+            $library_src = $library_src . '&subagency=' . $param_subagency;
+        }
+        if (null !== $param_sitetopic && $param_sitetopic !== "") {
+            $library_src = $library_src . '&sitetopic=' . $param_sitetopic;
+        }
+        if (null !== $param_siteplatform && $param_siteplatform !== "") {
+            $library_src = $library_src . '&siteplatform=' . $param_siteplatform;
+        }
+    } else {
+        \Drupal::logger('fed_dap')->error('Federal DAP - Seetings are not properly configured!');
+        $validation = false;
+    }
+
+    if ($validation) {
+        // no validation issues, render raw JavaScript Tag
+        if ($srcOnly) {
+            $result = $library_src;
+        } else {
+            $result = '<script async type="text/javascript" id="_fed_an_ua_tag" src="' . $library_src . '"></script>';
+        }
+    }
+    
+    return $result;
+}
+
+/**
+ * Implements hook_page_bottom().
+
+function fed_dap_page_top(array &$page_top) {
+    $user = \Drupal::currentUser();
+    $render_script = $user->hasPermission('display federal dap');
+    $admin_role = $user->hasRole('administrator');
+    
+    if ($render_script == true && $admin_role == false) {
+        $javascript_tag = _fed_dap_build_js_library();
+
+        if (false !== $javascript_tag) {
+            
+            $page_top['fed_dap'] = [
+                '#markup' => \Drupal\Core\Render\Markup::create($javascript_tag),
+                '#cache' => [
+                    'contexts' => ['user'],
+                    'tags' => ['user:' . $user->id()],
+                ],
+            ];
+            
+        }
+    }
+}
+ */
+
+/**
+ * Implements hook_library_info_build()
+ */
+function fed_dap_library_info_build() {
+  $libraries = [];
+  $libraries['libraries_fed_dap_ufa_dyn'] = [
+    'js' => [
+        _fed_dap_build_js_library(true) => [
+            'header' => true,
+            'type' => 'external',
+            'minified' => true,
+            'preprocess' => false,
+            'attributes' => [
+                'async' => true,
+                'id' => "_fed_an_ua_tag",
+            ],
+        ],
+    ],
+  ];
+  return $libraries;
+}
+
+
+/**
+ * 
+ * Implements hook_page_attachments()
+ */
+function fed_dap_page_attachments(array &$page) {
+  if (!\Drupal::currentUser()->hasPermission('display federal dap') || \Drupal::currentUser()->hasRole('administrator')) {
+    return;
+  }
+
+  $page['#attached']['library'][] = 'fed_dap/libraries_fed_dap_ufa_dyn';
+}
+ 
