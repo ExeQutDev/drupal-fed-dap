@@ -1,7 +1,7 @@
 ## INTRODUCTION
 
 The FED - Digital Analytics Program Government-wide Code module is an
-integration module to load and configure the client libraries for intgration.
+integration module to load and configure the client libraries for integration.
 
 Main Site
 https://digital.gov/guides/dap/
